@@ -4,20 +4,17 @@ import EventListAttendee from "./EventListAttendee";
 
 class EventListItem extends Component {
   render() {
+    const { event, selectEvent, removeEvent } = this.props;
     return (
       <Segment.Group>
         <Segment>
           <Item.Group>
             <Item>
-              <Item.Image
-                size="tiny"
-                circular
-                src={this.props.event.hostPhotoURL}
-              />
+              <Item.Image size="tiny" circular src={event.hostPhotoURL} />
               <Item.Content>
-                <Item.Header as="a">{this.props.event.title}</Item.Header>
+                <Item.Header as="a">{event.title}</Item.Header>
                 <Item.Description>
-                  Hosted by <a>{this.props.event.hostedBy}</a>
+                  Hosted by <a>{event.hostedBy}</a>
                 </Item.Description>
               </Item.Content>
             </Item>
@@ -25,26 +22,34 @@ class EventListItem extends Component {
         </Segment>
         <Segment>
           <span>
-            <Icon name="clock" /> {this.props.event.date} |
-            <Icon name="marker" /> {this.props.event.venue}
+            <Icon name="clock" /> {event.date} |
+            <Icon name="marker" /> {event.venue}
           </span>
         </Segment>
         <Segment secondary>
           <List horizontal>
-            {this.props.event.attendees &&
-              this.props.event.attendees.map((attend) => (
+            {event.attendees &&
+              event.attendees.map((attend) => (
                 <EventListAttendee key={attend.id} attend={attend} />
               ))}
           </List>
         </Segment>
         <Segment clearing>
-          <span>{this.props.event.description}</span>
+          <span>{event.description}</span>
           <Button
             as="a"
             color="teal"
             floated="right"
             content="View"
-            onClick={() => this.props.handelSelectedEvent(this.props.event)}
+            onClick={() => this.props.handelSelectedEvent(event)}
+          />
+
+          <Button
+            as="a"
+            color="red"
+            floated="left"
+            content="Delete"
+            onClick={() => this.props.removeEvent(event.id)}
           />
         </Segment>
       </Segment.Group>
