@@ -3,7 +3,7 @@ import EventListItem from "./EventListItem";
 
 class EventList extends Component {
   render() {
-    const { events, selectEvent, removeEvent } = this.props;
+    const { events, removeEvent } = this.props;
 
     return (
       <Fragment>
@@ -12,7 +12,7 @@ class EventList extends Component {
             key={event.id}
             event={event}
             removeEvent={removeEvent}
-            handelSelectedEvent={selectEvent}
+            handelSelectedEvent={this.props.handelSelectedEvent}
           />
         ))}
       </Fragment>
