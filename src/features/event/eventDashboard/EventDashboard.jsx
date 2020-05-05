@@ -59,6 +59,7 @@ class EventDashboard extends Component {
   state = {
     events: events,
     isOpen: false,
+    selectedEvent: null,
   };
 
   handelTogeleOpenForm = () => {
@@ -71,13 +72,20 @@ class EventDashboard extends Component {
     this.setState({ events: [...this.state.events, newEvent] });
   };
 
+  handelSelectedEvent = (event) => {
+    this.setState({ selectedEvent: event, isOpen: true });
+  };
+
   render() {
     const { events, isOpen } = this.state;
     return (
       <Container>
         <Grid>
           <Grid.Column width={10}>
-            <EventList events={events} />
+            <EventList
+              events={events}
+              handelSelectedEvent={this.handelSelectedEvent}
+            />
           </Grid.Column>
 
           <Grid.Column width={6}>
@@ -88,6 +96,8 @@ class EventDashboard extends Component {
             />
             {isOpen && (
               <EventForm
+                key={this.state.selectedEvent ? this.state.selectedEvent.id : 0}
+                selectdvent={this.state.selectedEvent}
                 createNewForm={this.handelCreateEven}
                 cancelFromOpen={this.handelTogeleOpenForm}
               />

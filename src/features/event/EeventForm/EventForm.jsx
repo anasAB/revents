@@ -10,10 +10,16 @@ class EventForm extends Component {
     hostedBy: "",
   };
 
+  componentDidMount() {
+    if (this.props.selectdvent !== null) {
+      this.setState({ ...this.props.selectdvent });
+    }
+    console.log("props", this.props);
+  }
+
   handelFormSubmit = (event) => {
     event.preventDefault();
     this.props.createNewForm(this.state);
-    console.log("STATE", this.state);
   };
 
   handleChange = (event) => {
@@ -56,7 +62,7 @@ class EventForm extends Component {
             <label>Venue</label>
             <input
               name="venue"
-              value={this.state.Venue}
+              value={this.state.venue}
               placeholder="Enter the Venue of the event"
               onChange={this.handleChange}
             />
