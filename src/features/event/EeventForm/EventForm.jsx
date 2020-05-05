@@ -14,12 +14,20 @@ class EventForm extends Component {
     if (this.props.selectdvent !== null) {
       this.setState({ ...this.props.selectdvent });
     }
-    console.log("props", this.props);
   }
 
   handelFormSubmit = (event) => {
     event.preventDefault();
-    this.props.createNewForm(this.state);
+
+    if (this.state.id) {
+      this.props.updateEvent(this.state);
+    } else {
+      this.props.createNewForm(this.state);
+    }
+  };
+
+  handelUpdateEvent = (event) => {
+    this.props.updateEvent(this.state);
   };
 
   handleChange = (event) => {
@@ -78,6 +86,9 @@ class EventForm extends Component {
           </Form.Field>
           <Button positive type="submit">
             Submit
+          </Button>
+          <Button positive type="submit" onClick={() => this.handelUpdateEvent}>
+            Update
           </Button>
           <Button type="button" onClick={this.props.cancelFromOpen}>
             Cancel
