@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import {
   Icon,
   Button,
@@ -8,9 +8,7 @@ import {
   Segment,
 } from "semantic-ui-react";
 
-const home = ({ history }) => {
-  console.log("history", history);
-
+const Home = ({ history }) => {
   return (
     <Segment inverted className="masthead">
       <Container text>
@@ -32,4 +30,4 @@ const home = ({ history }) => {
   );
 };
 
-export default home;
+export default Home;

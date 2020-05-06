@@ -1,9 +1,25 @@
 import React, { Component } from "react";
 import { Menu, Container, Button } from "semantic-ui-react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, withRouter } from "react-router-dom";
+import { SignOut } from "../Menus/SignOut";
+import { SignIn } from "../Menus/SignIn";
 
 class NavBar extends Component {
+  state = {
+    authenticated: true,
+  };
+
+  handelSignIn = () => {
+    this.setState({ authenticated: true });
+  };
+
+  handelSignOut = () => {
+    this.setState({ authenticated: false });
+    this.props.history.push("");
+  };
+
   render() {
+    const { authenticated } = this.state;
     return (
       <Menu inverted fixed="top">
         <Container>
@@ -24,19 +40,15 @@ class NavBar extends Component {
               content="Create Event"
             />
           </Menu.Item>
-          <Menu.Item position="right">
-            <Button basic inverted content="Login" />
-            <Button
-              basic
-              inverted
-              content="Sign Out"
-              style={{ marginLeft: "0.5em" }}
-            />
-          </Menu.Item>
+          {authenticated ? (
+            <SignIn signOut={this.handelSignOut} />
+          ) : (
+            <SignOut signIn={this.handelSignIn} />
+          )}
         </Container>
       </Menu>
     );
   }
 }
 
-export default NavBar;
+export default withRouter(NavBar);
