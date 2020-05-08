@@ -1,5 +1,5 @@
-import { INCREMENT_COUNER, DECREMENT_COUNTER } from "./testConstance";
 import { createReducer } from "../../app/common/util/reducerUtil";
+import { INCREMENT_COUNTER, DECREMENT_COUNTER } from "./testConstance";
 
 const initialState = {
   data: 10,
@@ -27,6 +27,6 @@ const decrementCounter = (state) => {
 };
 
 export default createReducer(initialState, {
-  [INCREMENT_COUNER]: incrementCounter,
+  [INCREMENT_COUNTER]: incrementCounter,
   [DECREMENT_COUNTER]: decrementCounter,
 });

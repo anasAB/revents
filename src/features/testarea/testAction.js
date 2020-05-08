@@ -1,9 +1,9 @@
-import { INCREMENT_COUNER, DECREMENT_COUNTER } from "./testConstance";
+import { INCREMENT_COUNTER, DECREMENT_COUNTER } from "./testConstance";
 
 //! Those method will be called in the Reducers
 export const incrementCounter = () => {
   return {
-    type: INCREMENT_COUNER,
+    type: INCREMENT_COUNTER,
   };
 };
 

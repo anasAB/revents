@@ -9,9 +9,6 @@ import { configureStore } from "./app/store/configureStore";
 
 const rootEl = document.getElementById("root");
 
-
-const store = configureStore();
-
 const store = configureStore();
 
 let render = () => {
