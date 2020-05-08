@@ -9,8 +9,11 @@ import { configureStore } from "./app/store/configureStore";
 
 const rootEl = document.getElementById("root");
 
+
 const store = configureStore();
-console.log("store", store.getState());
+
+const store = configureStore();
+
 let render = () => {
   ReactDOM.render(
     <Provider store={store}>
