@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Segment, Header, Item, Image } from "semantic-ui-react";
+import { connect } from "react-redux";
 
 const eventImageStyle = {
   filter: "brightness(30%)",
@@ -14,11 +15,15 @@ const eventImageTextStyle = {
   color: "white",
 };
 
-export const EventDetailHeader = () => {
+const EventDetailHeader = ({ event }) => {
   return (
     <Segment.Group>
       <Segment basic attached="top" style={{ padding: "0" }}>
-        <Image src="/assets/drinks.jpg" fluid style={eventImageStyle} />
+        <Image
+          src={`/assets/${event.category}.jpg`}
+          fluid
+          style={eventImageStyle}
+        />
 
         <Segment basic style={eventImageTextStyle}>
           <Item.Group>
@@ -28,10 +33,12 @@ export const EventDetailHeader = () => {
                   size="huge"
                   content="Event Title"
                   style={{ color: "white" }}
-                />
-                <p>Event Date</p>
+                >
+                  {event.title}
+                </Header>
+                <p>Event Date: {event.date}</p>
                 <p>
-                  Hosted by <strong>Hosted by</strong>
+                  Hosted by <strong>{event.hostedBy}</strong>
                 </p>
               </Item.Content>
             </Item>
@@ -50,3 +57,12 @@ export const EventDetailHeader = () => {
     </Segment.Group>
   );
 };
+
+// const mapStateToProps = (state) => {
+//   return {
+//     event: state.events,
+//   };
+// };
+
+// export default connect(mapStateToProps, null)(EventDetailHeader);
+export default EventDetailHeader;

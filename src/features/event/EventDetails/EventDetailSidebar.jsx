@@ -1,7 +1,8 @@
 import React, { Fragment } from "react";
 import { Item, Label, Segment } from "semantic-ui-react";
 
-export const EventDetailSidebar = () => {
+const EventDetailSidebar = ({ attendees }) => {
+  console.log("attendees", attendees);
   return (
     <Fragment>
       <Segment
@@ -12,25 +13,33 @@ export const EventDetailSidebar = () => {
         inverted
         color="teal"
       >
-        2 People Going
+        {attendees && attendees.length}
+        {attendees && attendees.length === 1 ? "Person" : "People"} Going
       </Segment>
       <Segment attached>
         <Item.Group divided>
-          <Item style={{ position: "relative" }}>
-            <Label
-              style={{ position: "absolute" }}
-              color="green"
-              ribbon="right"
-            >
-              Host
-            </Label>
-            <Item.Image size="tiny" src="/assets/user.png" />
-            <Item.Content verticalAlign="middle">
-              <Item.Header as="h3">Attendee Name</Item.Header>
-            </Item.Content>
-          </Item>
+          {attendees &&
+            attendees.map((attendee) => (
+              <Item key={attendee.id} style={{ position: "relative" }}>
+                {attendees.Host && (
+                  <Label
+                    style={{ position: "absolute" }}
+                    color="green"
+                    ribbon="right"
+                  >
+                    Host
+                  </Label>
+                )}
+                <Item.Image size="tiny" src={attendee.photoURL} />
+                <Item.Content verticalAlign="middle">
+                  <Item.Header as="h3">{attendee.name}</Item.Header>
+                </Item.Content>
+              </Item>
+            ))}
         </Item.Group>
       </Segment>
     </Fragment>
   );
 };
+
+export default EventDetailSidebar;
