@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, Segment, Header, Item, Image } from "semantic-ui-react";
-import { connect } from "react-redux";
 
 const eventImageStyle = {
   filter: "brightness(30%)",
@@ -58,11 +57,4 @@ const EventDetailHeader = ({ event }) => {
   );
 };
 
-// const mapStateToProps = (state) => {
-//   return {
-//     event: state.events,
-//   };
-// };
-
-// export default connect(mapStateToProps, null)(EventDetailHeader);
 export default EventDetailHeader;
