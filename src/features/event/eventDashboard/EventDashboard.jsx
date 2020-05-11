@@ -4,61 +4,10 @@ import EventList from "../eventList/EventList";
 import EventForm from "../EeventForm/EventForm";
 import cuid from "cuid";
 import { connect } from "react-redux";
-
-const events = [
-  {
-    id: "1",
-    title: "Trip to Tower of London",
-    date: "2018-03-27",
-    category: "culture",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.",
-    city: "London, UK",
-    venue: "Tower of London, St Katharine's & Wapping, London",
-    hostedBy: "Bob",
-    hostPhotoURL: "https://randomuser.me/api/portraits/men/20.jpg",
-    attendees: [
-      {
-        id: "a",
-        name: "Bob",
-        photoURL: "https://randomuser.me/api/portraits/men/20.jpg",
-      },
-      {
-        id: "b",
-        name: "Tom",
-        photoURL: "https://randomuser.me/api/portraits/men/22.jpg",
-      },
-    ],
-  },
-  {
-    id: "2",
-    title: "Trip to Punch and Judy Pub",
-    date: "2018-03-28",
-    category: "drinks",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.",
-    city: "London, UK",
-    venue: "Punch & Judy, Henrietta Street, London, UK",
-    hostedBy: "Tom",
-    hostPhotoURL: "https://randomuser.me/api/portraits/men/22.jpg",
-    attendees: [
-      {
-        id: "b",
-        name: "Tom",
-        photoURL: "https://randomuser.me/api/portraits/men/22.jpg",
-      },
-      {
-        id: "a",
-        name: "Bob",
-        photoURL: "https://randomuser.me/api/portraits/men/20.jpg",
-      },
-    ],
-  },
-];
+import { deleteEvent, UpdateEvent, creatEvent } from "../eventActions";
 
 class EventDashboard extends Component {
   state = {
-    events: events,
     isOpen: false,
     selectedEvent: null,
   };
@@ -67,10 +16,11 @@ class EventDashboard extends Component {
     this.setState((prevState) => ({ isOpen: !prevState.isOpen }));
   };
 
-  handelCreateEven = (newEvent) => {
+  handelCreateEvent = (newEvent) => {
     newEvent.id = cuid();
     newEvent.hostPhotoURL = "assets/user.png";
-    this.setState({ events: [...this.state.events, newEvent] });
+    this.setState({ events: [...this.props.events, newEvent] });
+    // this.props.creatEvent(newEvent); //! its not working yet
   };
 
   handelSelectedEvent = (event) => {
@@ -79,29 +29,18 @@ class EventDashboard extends Component {
 
   //!Update Event
   handelUpdateEvent = (updatedEvent) => {
-    this.setState(({ events }) => ({
-      events: events.map((event) => {
-        if (event.id === updatedEvent.id) {
-          return { ...updatedEvent }; //! its will spread the new updated event in our State
-        } else {
-          return event;
-        }
-      }),
-      selectedEvent: null,
-      isOpen: false,
-    }));
+    this.props.UpdateEvent(updatedEvent);
+    this.setState({ isOpen: false, selectedEvent: null });
   };
 
   //! Delete Event
   handelDeleteEven = (id) => {
-    this.setState(({ events }) => ({
-      events: events.filter((e) => e.id !== id),
-    }));
+    this.props.deleteEvent(id);
   };
 
   render() {
-    const { events, isOpen } = this.state;
-    // const { events } = this.props;
+    const { isOpen } = this.state;
+    const { events } = this.props;
     return (
       <Container>
         <Grid>
@@ -124,7 +63,7 @@ class EventDashboard extends Component {
                 key={this.state.selectedEvent ? this.state.selectedEvent.id : 0}
                 selectdvent={this.state.selectedEvent}
                 updateEvent={this.handelUpdateEvent}
-                createNewForm={this.handelCreateEven}
+                createNewForm={this.handelCreateEvent}
                 cancelFromOpen={this.handelTogeleOpenForm}
               />
             )}
@@ -135,9 +74,18 @@ class EventDashboard extends Component {
   }
 }
 
-// const mapStateToProps = (state) => ({
-//   events: state.event,
-// });
+const mapDispatchToProps = {
+  deleteEvent,
+  UpdateEvent,
+  creatEvent,
+};
 
-// export default connect(mapStateToProps)(EventDashboard);
-export default EventDashboard;
+const mapStateToProps = (state) => {
+  console.log("state", state);
+
+  return {
+    events: state.events,
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EventDashboard);
