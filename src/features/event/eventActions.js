@@ -4,20 +4,26 @@ import { CREAT_EVENT, DELETE_EVENT, UPDATE_EVENT } from "./eventConstants";
 export const creatEvent = (event) => {
   return {
     type: CREAT_EVENT,
-    Payload: { event },
+    payload: {
+      event,
+    },
   };
 };
 
 export const deleteEvent = (eventId) => {
   return {
     type: DELETE_EVENT,
-    payload: { eventId },
+    payload: {
+      eventId,
+    },
   };
 };
 
 export const UpdateEvent = (event) => {
   return {
     type: UPDATE_EVENT,
-    payload: { event },
+    payload: {
+      event,
+    },
   };
 };

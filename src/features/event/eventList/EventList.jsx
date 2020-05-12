@@ -10,7 +10,6 @@ class EventList extends Component {
             deleteEvent={this.props.removeEvent}
             key={event.id}
             event={event}
-            handelSelectedEvent={this.props.handelSelectedEvent}
           />
         ))}
       </Fragment>
