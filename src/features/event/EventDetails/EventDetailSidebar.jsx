@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 import { Item, Label, Segment } from "semantic-ui-react";
 
 const EventDetailSidebar = ({ attendees }) => {
-  console.log("attendees", attendees);
   return (
     <Fragment>
       <Segment
