@@ -6,6 +6,17 @@ import { reduxForm, Field } from "redux-form";
 import cuid from "cuid";
 import { TextInput } from "../../../app/common/Forms/TextInput";
 import { TextArea } from "../../../app/common/Forms/TextArea";
+import { SelectInput } from "../../../app/common/Forms/SelectInput";
+
+const category = [
+  { key: "drinks", text: "Drinks", value: "drinks" },
+  { key: "culture", text: "Culture", value: "culture" },
+  { key: "film", text: "Film", value: "film" },
+  { key: "food", text: "Food", value: "food" },
+  { key: "music", text: "Music", value: "music" },
+  { key: "travel", text: "Travel", value: "travel" },
+];
+
 class EventForm extends Component {
   // state = { ...this.props };
 
@@ -15,47 +26,46 @@ class EventForm extends Component {
   //   }
   // }
 
-  handelFormSubmit = (event) => {
-    event.preventDefault();
-    // if (this.state.id) {
-    //   this.props.UpdateEvent(this.state);
-    //   this.props.history.goBack();
-    // } else {
-    //   const newEvent = {
-    //     ...this.state,
-    //     id: cuid(),
-    //     hostPhotoURL: "/public/assets/user.png",
-    //   };
-    //   this.props.creatEvent(newEvent);
-    //   this.props.history.push("events");
-    // }
+  onhandelFormSubmit = (event) => {
+    if (this.props.initialValues.id) {
+      this.props.UpdateEvent(event);
+      this.props.history.push(`/event/${this.props.initialValues.id}`);
+    } else {
+      console.log("initialValues", this.props.initialValues, "event", event);
+      const newEvent = {
+        ...event,
+        id: cuid(),
+        hostPhotoURL: "/public/assets/user.png",
+        hostedBy: "BOB",
+      };
+      this.props.creatEvent(newEvent);
+      this.props.history.push("events");
+    }
   };
 
   handelUpdateEvent = (event) => {
     this.props.updateEvent(this.state);
   };
 
-  // handleChange = (event) => {
-  //   this.setState({ [event.target.name]: event.target.value });
-  // };
-
   render() {
+    const { history } = this.props;
     return (
       <Grid>
         <Grid.Column width={10}>
           <Segment>
             <Header sub color="teal" content="Event Details" />
-            <Form onSubmit={this.handelFormSubmit}>
+            <Form onSubmit={this.props.handleSubmit(this.onhandelFormSubmit)}>
               <Field
                 name="title"
                 component={TextInput}
                 placeholder="Give Your Event A Name"
-                // value={}
               />
               <Field
                 name="category"
-                component={TextInput}
+                component={SelectInput}
                 placeholder="What Is Your Event About !"
+                options={category}
+                // multiple={true}
               />
 
               <Field
@@ -99,7 +109,7 @@ class EventForm extends Component {
               >
                 Update
               </Button>
-              <Button type="button" onClick={() => this.props.history.goBack()}>
+              <Button type="button" onClick={() => history.goBack()}>
                 Cancel
               </Button>
             </Form>
@@ -111,20 +121,14 @@ class EventForm extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let event = {
-    title: "",
-    date: "",
-    city: "",
-    venue: "",
-    hostedBy: "",
-  };
+  let event = {};
 
   const eventId = ownProps.match.params.id;
   if (eventId && state.events.length > 0) {
     event = state.events.filter((event) => event.id === eventId)[0];
   }
 
-  return event;
+  return { initialValues: event };
 };
 
 const mapDispatchToProps = {
