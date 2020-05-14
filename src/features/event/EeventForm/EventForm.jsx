@@ -7,6 +7,28 @@ import cuid from "cuid";
 import { TextInput } from "../../../app/common/Forms/TextInput";
 import { TextArea } from "../../../app/common/Forms/TextArea";
 import { SelectInput } from "../../../app/common/Forms/SelectInput";
+import { DateInput } from "../../../app/common/Forms/DateInput";
+
+import {
+  composeValidators,
+  combineValidators,
+  isRequired,
+  hasLengthGreaterThan,
+} from "revalidate";
+
+const validate = combineValidators({
+  title: isRequired({ message: "the Event Title is required..!" }),
+  category: isRequired({ message: "Category is required..!" }),
+  description: composeValidators(
+    isRequired({ message: "Description is required...!" }),
+    hasLengthGreaterThan(4)({
+      message: "Descriptions should more than few words..!",
+    })
+  )(),
+  city: isRequired({ message: "Dont forget the City" }),
+  venue: isRequired("venue"),
+  date: isRequired("Date"),
+});
 
 const category = [
   { key: "drinks", text: "Drinks", value: "drinks" },
@@ -18,14 +40,6 @@ const category = [
 ];
 
 class EventForm extends Component {
-  // state = { ...this.props };
-
-  // componentDidMount() {
-  //   if (this.props.selectdvent !== null) {
-  //     this.setState({ ...this.props.selectdvent });
-  //   }
-  // }
-
   onhandelFormSubmit = (event) => {
     if (this.props.initialValues.id) {
       this.props.UpdateEvent(event);
@@ -48,7 +62,9 @@ class EventForm extends Component {
   };
 
   render() {
-    const { history } = this.props;
+    console.log("props", this.props);
+
+    const { history, invalid, pristine } = this.props;
     return (
       <Grid>
         <Grid.Column width={10}>
@@ -95,11 +111,13 @@ class EventForm extends Component {
               />
               <Field
                 name="date"
-                component={TextInput}
-                placeholder="Event Date"
+                component={DateInput}
+                dateFormat="dd LLL yyyy h:mm a"
+                showTimeSelect
+                placeholder="Date and Time of Event."
               />
 
-              <Button positive type="submit">
+              <Button positive type="submit" disabled={invalid || pristine}>
                 Submit
               </Button>
               <Button
@@ -138,4 +156,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(reduxForm({ form: "eventForm" })(EventForm));
+)(reduxForm({ form: "eventForm", validate })(EventForm));
