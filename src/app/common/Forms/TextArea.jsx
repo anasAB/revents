@@ -4,7 +4,6 @@ import { Form, Label } from "semantic-ui-react";
 export const TextArea = ({
   input,
   type,
-  width,
   rows,
   placeholder,
   meta: { touched, error },

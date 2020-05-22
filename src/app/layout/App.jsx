@@ -10,11 +10,13 @@ import UserDetailsPage from "../../features/user/UserDetails/UserDetailsPage";
 import EventForm from "../../features/event/EeventForm/EventForm";
 import SettingDashboard from "../../features/user/setting/SettingDashboard";
 import testComponent from "../../features/testarea/testComponent";
+import ModelManger from "../../features/model/modelManger";
 
 class App extends Component {
   render() {
     return (
       <Fragment>
+        <ModelManger />
         <Route path="/" exact component={Home} />
         <Route
           path="/(.+)"
