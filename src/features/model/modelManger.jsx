@@ -25,7 +25,6 @@ const modelManger = ({ currentModal }) => {
 };
 
 const mapSateToProps = (state) => {
-  console.log("ModelManger", state);
   return {
     currentModal: state.models,
   };

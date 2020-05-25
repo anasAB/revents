@@ -17,6 +17,7 @@ class App extends Component {
     return (
       <Fragment>
         <ModelManger />
+
         <Route path="/" exact component={Home} />
         <Route
           path="/(.+)"
