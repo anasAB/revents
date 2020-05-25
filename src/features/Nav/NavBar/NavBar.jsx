@@ -5,14 +5,10 @@ import { SignOut } from "../Menus/SignOut";
 import { SignIn } from "../Menus/SignIn";
 import { openModel } from "../../model/modelActions";
 import { connect } from "react-redux";
+import { logout } from "../../auth/authActions";
 
 class NavBar extends Component {
-  state = {
-    authenticated: false,
-  };
-
   handelSignIn = () => {
-    // this.setState({ authenticated: true });
     this.props.openModel("LoginModal");
   };
 
@@ -21,12 +17,12 @@ class NavBar extends Component {
   };
 
   handelSignOut = () => {
-    this.setState({ authenticated: false });
+    this.props.logout();
     this.props.history.push("");
   };
 
   render() {
-    const { authenticated } = this.state;
+    const { authenticated, currentUser } = this.props;
     return (
       <Menu inverted fixed="top">
         <Container>
@@ -49,7 +45,7 @@ class NavBar extends Component {
             />
           </Menu.Item>
           {authenticated ? (
-            <SignIn signOut={this.handelSignOut} />
+            <SignIn signOut={this.handelSignOut} currentUser={currentUser} />
           ) : (
             <SignOut
               signIn={this.handelSignIn}
@@ -62,8 +58,14 @@ class NavBar extends Component {
   }
 }
 
+const mapSateToProps = (state) => ({
+  authenticated: state.auth.authenticated,
+  currentUser: state.auth.currentUser,
+});
+
 const mapDispatchToProps = {
   openModel,
+  logout,
 };
 
-export default withRouter(connect(null, mapDispatchToProps)(NavBar));
+export default withRouter(connect(mapSateToProps, mapDispatchToProps)(NavBar));

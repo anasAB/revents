@@ -7,8 +7,9 @@ import { closeModel } from "./modelActions";
 
 class LoginModal extends Component {
   render() {
+    const { closeModel } = this.props;
     return (
-      <Modal size="mini" open={true} onClose={this.props.closeModel}>
+      <Modal size="mini" open={true} onClose={closeModel}>
         <Modal.Header>Login to Re-vents</Modal.Header>
         <Modal.Content>
           <Modal.Description>

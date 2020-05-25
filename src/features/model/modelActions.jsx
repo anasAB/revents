@@ -10,12 +10,8 @@ export const openModel = (modelName, modelProps) => {
   };
 };
 
-export const closeModel = (modelName, modelProps) => {
+export const closeModel = () => {
   return {
     type: CLOSE_MODEL,
-    // payload: {
-    //   modelName,
-    //   modelProps,
-    // },
   };
 };
