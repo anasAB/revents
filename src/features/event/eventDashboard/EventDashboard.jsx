@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Grid, Container, Button } from "semantic-ui-react";
+import { Grid, Container, Message, Icon } from "semantic-ui-react";
 import EventList from "../eventList/EventList";
 import cuid from "cuid";
 import { connect } from "react-redux";
 import { deleteEvent, UpdateEvent, creatEvent } from "../eventActions";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 
 class EventDashboard extends Component {
   handelCreateEvent = (newEvent) => {
@@ -23,29 +24,28 @@ class EventDashboard extends Component {
   };
 
   render() {
-    const { events } = this.props;
+    const { events, loading } = this.props;
+    if (loading) {
+      return <LoadingComponent inverted={false} />;
+    }
+
     return (
       <Container>
         <Grid>
           <Grid.Column width={10}>
-            <EventList events={events} removeEvent={this.handelDeleteEven} />
+            {events.length > 0 ? (
+              <EventList events={events} removeEvent={this.handelDeleteEven} />
+            ) : (
+              <Message icon error>
+                <Icon name="circle notched" loading />
+                <Message.Content>
+                  <Message.Header>Please Try Again alter..!</Message.Header>
+                </Message.Content>
+              </Message>
+            )}
           </Grid.Column>
 
           <Grid.Column width={6}>
-            {/* <Button
-              positive
-              content="create Event"
-              onClick={this.handelTogeleOpenForm}
-            />
-            {isOpen && (
-              <EventForm
-                key={this.state.selectedEvent ? this.state.selectedEvent.id : 0}
-                selectdvent={this.state.selectedEvent}
-                updateEvent={this.handelUpdateEvent}
-                createNewForm={this.handelCreateEvent}
-                // cancelFromOpen={this.handelTogeleOpenForm}
-              />
-            )} */}
             <h1>Acivity Feed</h1>
           </Grid.Column>
         </Grid>
@@ -63,6 +63,7 @@ const mapDispatchToProps = {
 const mapStateToProps = (state) => {
   return {
     events: state.events,
+    loading: state.async.loading,
   };
 };
 

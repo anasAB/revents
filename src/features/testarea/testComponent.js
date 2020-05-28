@@ -1,19 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Button } from "semantic-ui-react";
-import {
-  incrementCounter,
-  decrementCounter,
-  incrementAsync,
-  decrementAsync,
-} from "./testAction";
+import { incrementAsync, decrementAsync } from "./testAction";
 
 class testComponent extends Component {
   render() {
     const {
       data,
-      incrementCounter,
-      decrementCounter,
+
       incrementAsync,
       decrementAsync,
       loading,
@@ -48,7 +42,6 @@ class testComponent extends Component {
 
 const mapDispatchToProps = {
   incrementAsync,
-  decrementCounter,
   decrementAsync,
 };
 
