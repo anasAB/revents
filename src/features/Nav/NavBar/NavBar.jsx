@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Menu, Container, Button } from "semantic-ui-react";
 import { NavLink, Link, withRouter } from "react-router-dom";
 import { SignOut } from "../Menus/SignOut";
@@ -30,20 +30,24 @@ class NavBar extends Component {
             <img src="assets/logo.png" alt="logo" />
             Re-vents
           </Menu.Item>
-          <Menu.Item as={NavLink} to="/events" name="Events" />
-          <Menu.Item as={NavLink} to="/people" name="people" />
-          <Menu.Item as={NavLink} to="/test" name="test" />
+          {authenticated && (
+            <Fragment>
+              <Menu.Item as={NavLink} to="/events" name="Events" />
+              <Menu.Item as={NavLink} to="/people" name="people" />
+              <Menu.Item as={NavLink} to="/test" name="test" />
+              <Menu.Item>
+                <Button
+                  as={Link}
+                  to="createEvent"
+                  floated="right"
+                  positive
+                  inverted
+                  content="Create Event"
+                />
+              </Menu.Item>
+            </Fragment>
+          )}
 
-          <Menu.Item>
-            <Button
-              as={Link}
-              to="createEvent"
-              floated="right"
-              positive
-              inverted
-              content="Create Event"
-            />
-          </Menu.Item>
           {authenticated ? (
             <SignIn signOut={this.handelSignOut} currentUser={currentUser} />
           ) : (
@@ -58,10 +62,14 @@ class NavBar extends Component {
   }
 }
 
-const mapSateToProps = (state) => ({
-  authenticated: state.auth.authenticated,
-  currentUser: state.auth.currentUser,
-});
+const mapSateToProps = (state) => {
+  console.log("##NAVA", state);
+
+  return {
+    authenticated: state.auth.authenticated,
+    currentUser: state.auth.currentUser,
+  };
+};
 
 const mapDispatchToProps = {
   openModel,

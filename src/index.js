@@ -12,7 +12,6 @@ import { loadEvents } from "./features/event/eventActions";
 const rootEl = document.getElementById("root");
 
 const store = configureStore();
-console.log("store ", store.getState());
 
 store.dispatch(loadEvents()); //!Load all the events from the Store
 
