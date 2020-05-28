@@ -45,7 +45,7 @@ class EventForm extends Component {
       this.props.UpdateEvent(event);
       this.props.history.push(`/event/${this.props.initialValues.id}`);
     } else {
-      console.log("initialValues", this.props.initialValues, "event", event);
+      // console.log("initialValues", this.props.initialValues, "event", event);
       const newEvent = {
         ...event,
         id: cuid(),
@@ -62,8 +62,6 @@ class EventForm extends Component {
   };
 
   render() {
-    console.log("props", this.props);
-
     const { history, invalid, pristine } = this.props;
     return (
       <Grid>
