@@ -1,4 +1,15 @@
-import { CREAT_EVENT, DELETE_EVENT, UPDATE_EVENT } from "./eventConstants";
+import {
+  CREAT_EVENT,
+  DELETE_EVENT,
+  UPDATE_EVENT,
+  FETCH_EVENT,
+} from "./eventConstants";
+import {
+  asyncActionFinish,
+  asyncActionStart,
+  asyncActionFail,
+} from "../async/asyncActions";
+import { fetchSampleData } from "../../app/data/mockApi";
 
 //! Action Creator
 export const creatEvent = (event) => {
@@ -25,5 +36,21 @@ export const UpdateEvent = (event) => {
     payload: {
       event,
     },
+  };
+};
+
+//!fetching sampleData
+export const loadEvents = () => {
+  return async (dispatch) => {
+    try {
+      dispatch(asyncActionStart());
+      const events = await fetchSampleData();
+      dispatch({ type: FETCH_EVENT, payload: { events } });
+      dispatch(asyncActionFinish());
+    } catch (error) {
+      console.log("#####ERROR#######:", error);
+
+      dispatch(asyncActionFail());
+    }
   };
 };
