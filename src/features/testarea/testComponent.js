@@ -46,8 +46,6 @@ const mapDispatchToProps = {
 };
 
 const mapSateToProps = (state) => {
-  console.log("#TEST Component ", state);
-
   return {
     data: state.tests.data,
     loading: state.async.loading,
