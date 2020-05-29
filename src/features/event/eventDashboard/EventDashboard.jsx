@@ -5,6 +5,7 @@ import cuid from "cuid";
 import { connect } from "react-redux";
 import { deleteEvent, UpdateEvent, creatEvent } from "../eventActions";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
+import EventActivity from "../EventActivity/EventActivity";
 
 class EventDashboard extends Component {
   handelCreateEvent = (newEvent) => {
@@ -46,7 +47,7 @@ class EventDashboard extends Component {
           </Grid.Column>
 
           <Grid.Column width={6}>
-            <h1>Acivity Feed</h1>
+            <EventActivity />
           </Grid.Column>
         </Grid>
       </Container>

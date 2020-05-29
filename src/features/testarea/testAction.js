@@ -20,8 +20,6 @@ const delay = (ms) => {
 };
 
 export const incrementAsync = (buttonName) => {
-  console.log("#ButonName", buttonName);
-
   return async (dispatch) => {
     //dispatch(asyncActionStart()); //!To pass the Button name we need to change it to return{typel:.., payload}
     dispatch({ type: ASYNC_ACTION_START, payload: buttonName });

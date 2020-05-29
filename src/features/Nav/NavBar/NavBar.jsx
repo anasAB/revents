@@ -63,8 +63,6 @@ class NavBar extends Component {
 }
 
 const mapSateToProps = (state) => {
-  console.log("##NAVA", state);
-
   return {
     authenticated: state.auth.authenticated,
     currentUser: state.auth.currentUser,
