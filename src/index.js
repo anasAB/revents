@@ -7,7 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "./app/store/configureStore";
 import ScrollToTop from "./app/common/util/ScrollToTop";
-import { loadEvents } from "./features/event/eventActions";
+// import { loadEvents } from "./features/event/eventActions";
 import ReduxToastr from "react-redux-toastr";
 import "react-redux-toastr/lib/css/react-redux-toastr.min.css";
 
@@ -15,7 +15,10 @@ const rootEl = document.getElementById("root");
 
 const store = configureStore();
 
-store.dispatch(loadEvents()); //!Load all the events from the Store
+//!Load all the events from Local Store
+// store.dispatch(loadEvents());
+
+//! Load events from Firebase
 
 let render = () => {
   ReactDOM.render(
