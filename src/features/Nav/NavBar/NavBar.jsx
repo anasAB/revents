@@ -6,6 +6,7 @@ import { SignIn } from "../Menus/SignIn";
 import { openModel } from "../../model/modelActions";
 import { connect } from "react-redux";
 import { logout } from "../../auth/authActions";
+import { withFirebase } from "react-redux-firebase"; //! adding withFirebase will listen to every new changes, and allow us to use Firebase functions
 
 class NavBar extends Component {
   handelSignIn = () => {
@@ -17,12 +18,14 @@ class NavBar extends Component {
   };
 
   handelSignOut = () => {
-    this.props.logout();
+    this.props.firebase.logout();
+
     this.props.history.push("");
   };
 
   render() {
-    const { authenticated, currentUser } = this.props;
+    const { authenticated } = this.props;
+    const auth = authenticated.apiKey && !authenticated.isEmpty;
     return (
       <Menu inverted fixed="top">
         <Container>
@@ -30,7 +33,7 @@ class NavBar extends Component {
             <img src="assets/logo.png" alt="logo" />
             Re-vents
           </Menu.Item>
-          {authenticated && (
+          {auth && (
             <Fragment>
               <Menu.Item as={NavLink} to="/events" name="Events" />
               <Menu.Item as={NavLink} to="/people" name="people" />
@@ -48,8 +51,8 @@ class NavBar extends Component {
             </Fragment>
           )}
 
-          {authenticated ? (
-            <SignIn signOut={this.handelSignOut} currentUser={currentUser} />
+          {auth ? (
+            <SignIn signOut={this.handelSignOut} currentUser={authenticated} />
           ) : (
             <SignOut
               signIn={this.handelSignIn}
@@ -63,9 +66,11 @@ class NavBar extends Component {
 }
 
 const mapSateToProps = (state) => {
+  console.log("##STATE", state);
+
   return {
-    authenticated: state.auth.authenticated,
-    currentUser: state.auth.currentUser,
+    // authenticated: state.auth.authenticated,
+    authenticated: state.firebase.auth,
   };
 };
 
@@ -74,4 +79,6 @@ const mapDispatchToProps = {
   logout,
 };
 
-export default withRouter(connect(mapSateToProps, mapDispatchToProps)(NavBar));
+export default withRouter(
+  withFirebase(connect(mapSateToProps, mapDispatchToProps)(NavBar))
+);
