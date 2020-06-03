@@ -64,7 +64,6 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => {
-  console.log("###StAta0", state);
   return {
     // events: state.events,
     //!Load events from FireStore 0

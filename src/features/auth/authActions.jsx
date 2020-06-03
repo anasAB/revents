@@ -1,14 +1,21 @@
 import { LOGIN_USER, LOGOUT_USER } from "./authConstants";
 import { closeModel } from "../model/modelActions";
+import { toastr } from "react-redux-toastr";
+import { SubmissionError } from "redux-form";
 
 export const logIn = (credentials) => {
-  return (disptach) => {
-    disptach({
-      type: LOGIN_USER,
-      payload: { credentials },
-    });
+  return async (disptach, getState, { getFirebase }) => {
+    const firbase = getFirebase();
 
-    disptach(closeModel());
+    try {
+      await firbase
+        .auth()
+        .signInWithEmailAndPassword(credentials.email, credentials.password);
+      disptach(closeModel());
+      toastr.success("Success!", "Welcome to our Events.. ");
+    } catch (error) {
+      throw new SubmissionError({ _error: error.message });
+    }
   };
 };
 
