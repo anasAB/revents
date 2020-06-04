@@ -2,6 +2,8 @@ import { LOGIN_USER, LOGOUT_USER } from "./authConstants";
 import { closeModel } from "../model/modelActions";
 import { toastr } from "react-redux-toastr";
 import { SubmissionError } from "redux-form";
+import { getFirestore } from "redux-firestore";
+import { firestore } from "firebase";
 
 export const logIn = (credentials) => {
   return async (disptach, getState, { getFirebase }) => {
@@ -23,4 +25,32 @@ export const logout = () => {
   return {
     type: LOGOUT_USER,
   };
+};
+
+export const registration = (user) => async (
+  disptach,
+  getState,
+  { getFirebase, getFirestore }
+) => {
+  const firebase = getFirebase();
+  const firstore = getFirestore();
+  try {
+    let creatUser = await firebase
+      .auth()
+      .createUserWithEmailAndPassword(user.email, user.password);
+    console.log("#creatUser", creatUser);
+    await creatUser.user.updateProfile({ displayName: user.displayName });
+
+    let newUser = {
+      displayName: user.displayName,
+      createdAt: firstore.FieldValue.serverTimestamp(),
+    };
+    console.log("#newUser", newUser);
+
+    await firstore.set(`users/${creatUser.user.uid}`, { ...newUser });
+    disptach(closeModel());
+  } catch (error) {
+    // toastr.error(error.message);
+    throw new SubmissionError({ _error: error.message });
+  }
 };
