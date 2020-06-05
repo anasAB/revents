@@ -1,10 +1,11 @@
 import React from "react";
-import { Form, Segment, Button, Label } from "semantic-ui-react";
+import { Form, Segment, Button, Label, Divider } from "semantic-ui-react";
 import { Field, reduxForm } from "redux-form";
 import { TextInput } from "../../../app/common/Forms/TextInput";
 import { connect } from "react-redux";
-import { registration } from "../authActions";
+import { registration, socialLogInMethod } from "../authActions";
 import { combineValidators, isRequired } from "revalidate";
+import SocialLogin from "../Social-Login/socialLogin";
 
 const validate = combineValidators({
   displayName: isRequired({ message: "Name is Required!" }),
@@ -18,6 +19,7 @@ const RegisterForm = ({
   error,
   invalid,
   submitting,
+  socialLogInMethod,
 }) => {
   return (
     <div>
@@ -56,6 +58,8 @@ const RegisterForm = ({
             </Label>
           )}
         </Segment>
+        <Divider horizontal>OR</Divider>
+        <SocialLogin socialLogInMethod={socialLogInMethod} />
       </Form>
     </div>
   );
@@ -63,6 +67,7 @@ const RegisterForm = ({
 
 const mapDispatchToProps = {
   registration,
+  socialLogInMethod,
 };
 
 export default connect(

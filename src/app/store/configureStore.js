@@ -12,6 +12,7 @@ const rrfConfig = {
   userProfile: "users",
   attachAuthIsReady: true,
   useFirestoreForProfile: true,
+  updateProfileOnLogIn: false,
 };
 export const configureStore = () => {
   //! Adding Thunk
