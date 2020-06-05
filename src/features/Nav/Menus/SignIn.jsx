@@ -5,8 +5,12 @@ import { Link } from "react-router-dom";
 export const SignIn = ({ signOut, currentUser }) => {
   return (
     <Menu.Item position="right">
-      <Image avatar spaced="right" src="/assets/user.png" />
-      <Dropdown pointing="top left" text={currentUser.email}>
+      <Image
+        avatar
+        spaced="right"
+        src={currentUser.photoURL || "/assets/user.png"}
+      />
+      <Dropdown pointing="top left" text={currentUser.displayName}>
         <Dropdown.Menu>
           <Dropdown.Item text="Create Event" icon="plus" />
           <Dropdown.Item text="My Events" icon="calendar" />

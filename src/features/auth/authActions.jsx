@@ -54,3 +54,35 @@ export const registration = (user) => async (
     throw new SubmissionError({ _error: error.message });
   }
 };
+
+//!SocialLogIn
+export const socialLogInMethod = (selectedProvider) => async (
+  dispatch,
+  getState,
+  { getFirebase, getFirestore }
+) => {
+  const firebase = getFirebase();
+  const firestore = getFirestore();
+  try {
+    let user = await firebase.login({
+      provider: selectedProvider,
+      type: "popup",
+    });
+
+    console.log("#user", user);
+    //!Check if this user already exists
+    if (user.additionalUserInfo.isNewUser) {
+      await firestore.set(`users/${user.user.uid}`, {
+        displayName: user.profile.displayName,
+        photoURL: user.profile.avatarUrl,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      });
+      toastr.success("Success!", "Welcome to our Events.. ");
+    } else {
+      toastr.success("Success!", `Welcome Back ${user.profile.displayName}`);
+    }
+    dispatch(closeModel());
+  } catch (error) {
+    console.log(error);
+  }
+};
