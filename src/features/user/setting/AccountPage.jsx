@@ -92,7 +92,7 @@ const AccountPage = ({
             </Button>
           </div>
         )}
-        {providerId && providerId === "facebook.com" && (
+        {providerId && providerId === "google.com" && (
           <div>
             <Header color="teal" sub content="Google Account" />
             <p>Please visit Google to update your account settings</p>
