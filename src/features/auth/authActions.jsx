@@ -1,7 +1,7 @@
 import { LOGIN_USER, LOGOUT_USER } from "./authConstants";
 import { closeModel } from "../model/modelActions";
 import { toastr } from "react-redux-toastr";
-import { SubmissionError } from "redux-form";
+import { SubmissionError, reset } from "redux-form";
 import { getFirestore } from "redux-firestore";
 import { firestore } from "firebase";
 
@@ -38,15 +38,12 @@ export const registration = (user) => async (
     let creatUser = await firebase
       .auth()
       .createUserWithEmailAndPassword(user.email, user.password);
-    console.log("#creatUser", creatUser);
     await creatUser.user.updateProfile({ displayName: user.displayName });
 
     let newUser = {
       displayName: user.displayName,
       createdAt: firstore.FieldValue.serverTimestamp(),
     };
-    console.log("#newUser", newUser);
-
     await firstore.set(`users/${creatUser.user.uid}`, { ...newUser });
     disptach(closeModel());
   } catch (error) {
@@ -83,6 +80,28 @@ export const socialLogInMethod = (selectedProvider) => async (
     }
     dispatch(closeModel());
   } catch (error) {
+    throw new SubmissionError({ _error: error.message });
     console.log(error);
+  }
+};
+
+//! Update Password
+export const updatePassword = (password) => async (
+  dispatch,
+  getState,
+  { getFirebase }
+) => {
+  const firebase = getFirebase();
+  const user = firebase.auth().currentUser;
+  console.log("###user", user);
+  console.log("###password", password);
+
+  try {
+    await user.updatePassword(password.newPassword1);
+    await dispatch(reset("account"));
+    toastr.success("Success!", "Password Has Been Updated.. ");
+  } catch (error) {
+    throw new SubmissionError({ _error: error.message });
+    console.log("# Change password error...!");
   }
 };
