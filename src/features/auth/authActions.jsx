@@ -66,7 +66,6 @@ export const socialLogInMethod = (selectedProvider) => async (
       type: "popup",
     });
 
-    console.log("#user", user);
     //!Check if this user already exists
     if (user.additionalUserInfo.isNewUser) {
       await firestore.set(`users/${user.user.uid}`, {
@@ -81,27 +80,21 @@ export const socialLogInMethod = (selectedProvider) => async (
     dispatch(closeModel());
   } catch (error) {
     throw new SubmissionError({ _error: error.message });
-    console.log(error);
   }
 };
 
 //! Update Password
 export const updatePassword = (password) => async (
   dispatch,
-  getState,
   { getFirebase }
 ) => {
   const firebase = getFirebase();
   const user = firebase.auth().currentUser;
-  console.log("###user", user);
-  console.log("###password", password);
-
   try {
     await user.updatePassword(password.newPassword1);
     await dispatch(reset("account"));
     toastr.success("Success!", "Password Has Been Updated.. ");
   } catch (error) {
     throw new SubmissionError({ _error: error.message });
-    console.log("# Change password error...!");
   }
 };
