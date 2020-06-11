@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Grid } from "semantic-ui-react";
 import SettingNav from "../setting/SettingNav";
 import { Route, Switch, Redirect } from "react-router-dom";
@@ -8,15 +8,32 @@ import PhotosPage from "./PhotosPage";
 import AccountPage from "./AccountPage";
 import { connect } from "react-redux";
 import { updatePassword } from "../../auth/authActions";
+import { updateProfile } from "../userAcions";
 
-const SettingDashboard = ({ updatePassword, providerId }) => {
+const SettingDashboard = ({
+  updatePassword,
+  providerId,
+  updateProfile,
+  user,
+}) => {
   return (
     <Grid>
       <Grid.Column width={12}>
         <Switch>
           <Redirect exact from="/setting" to="/setting/basic"></Redirect>
-          <Route path="/setting/basic" component={BasicPage} />
-          <Route path="/setting/about" component={AboutPage} />
+          <Route
+            path="/setting/basic"
+            render={() => (
+              <BasicPage initialValues={user} updateProfile={updateProfile} />
+            )}
+          />
+          <Route
+            path="/setting/about"
+            render={() => (
+              <AboutPage initialValues={user} updateProfile={updateProfile} />
+            )}
+          />
+          } />
           <Route path="/setting/photos" component={PhotosPage} />
           <Route
             path="/setting/account"
@@ -39,13 +56,16 @@ const SettingDashboard = ({ updatePassword, providerId }) => {
 
 const mapDispatchToProps = {
   updatePassword,
+  updateProfile,
 };
 
 const mapStateToProps = (state) => {
+  console.log("#ٍStatee", state);
   return {
     providerId:
       state.firebase.auth.isLoaded &&
       state.firebase.auth.providerData[0].providerId,
+    user: state.firebase.profile,
   };
 };
 

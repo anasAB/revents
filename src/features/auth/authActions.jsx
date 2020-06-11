@@ -98,3 +98,5 @@ export const updatePassword = (password) => async (
     throw new SubmissionError({ _error: error.message });
   }
 };
+
+//!update Profile
