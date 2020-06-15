@@ -4,7 +4,6 @@ import { Field, reduxForm } from "redux-form";
 import { DateInput } from "../../../app/common/Forms/DateInput";
 import { TextInput } from "../../../app/common/Forms/TextInput";
 import RadioInput from "../../../app/common/Forms/RadioInput";
-import moment from "moment";
 
 class BasicPage extends Component {
   render() {

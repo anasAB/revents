@@ -1,8 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import TestModel from "./TestModel";
-import { ModalComponent } from "semantic-ui-react";
-
 import RegisterModal from "./registerModal";
 import LoginModal from "./loginModal";
 

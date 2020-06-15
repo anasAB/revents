@@ -1,9 +1,7 @@
-import { LOGIN_USER, LOGOUT_USER } from "./authConstants";
+import { LOGOUT_USER } from "./authConstants";
 import { closeModel } from "../model/modelActions";
 import { toastr } from "react-redux-toastr";
 import { SubmissionError, reset } from "redux-form";
-import { getFirestore } from "redux-firestore";
-import { firestore } from "firebase";
 
 export const logIn = (credentials) => {
   return async (disptach, getState, { getFirebase }) => {
