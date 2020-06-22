@@ -21,63 +21,6 @@ export const updateProfile = (user) => async (
     throw new SubmissionError({ _error: error.message });
   }
 };
-//uploadProfilePhoto
-//! Upload the new Photo
-// export const uploadProfilePhoto = (file, fileName) => async (
-//   dispatch,
-//   getState,
-//   { getFirebase, getFirStore }
-// ) => async (dispatch, getState, { getFirebase, getFirestore }) => {
-//   const firebase = getFirebase();
-//   const firestore = getFirestore();
-//   const user = firebase.auth().currentUser;
-//   const path = `${user.id}/user_images`;
-//   const options = {
-//     name: fileName,
-//   };
-
-//   try {
-//     dispatch(asyncActionStart());
-//     //? ----->upload the img to firebase
-//     let uploadFile = await firebase.uploadFile(path, file, null, options);
-//     console.log("##uploadFile", uploadFile);
-//     //? ----->get url of the img
-//     let downloadURL = await uploadFile.uploadTaskSnapshot.ref.getDownloadURL(); //! it should give us the img url in firebase storage
-
-//     //? ----->get userDoc
-//     let userDoc = await firebase.get(`user/${user.id}`);
-
-//     //? ----->check if the user has photo, if not update ProfilePhoto
-//     if (!userDoc.data().photoURL) {
-//       await firebase.updateProfile({
-//         photoURL: downloadURL,
-//       });
-//       //? update the auth section in the firebase
-//       await user.updateProfile({
-//         photoURL: downloadURL,
-//       });
-//     }
-//     //? ----->add the photo to fireStore
-//     await firestore.add(
-//       {
-//         collection: "user",
-//         doc: user.id,
-//         subcollections: [{ collecion: "photos" }], //? it will be created in case it wasn't existed
-//       },
-//       {
-//         //? What we will add in our subcollections
-//         name: fileName,
-//         url: downloadURL,
-//       }
-//     );
-//     dispatch(asyncActionFinish());
-//   } catch (error) {
-//     console.log(error);
-
-//     dispatch(asyncActionFail());
-//     throw new SubmissionError({ _error: error.message });
-//   }
-// };
 
 export const uploadProfileImage = (file, fileName) => async (
   dispatch,
@@ -88,30 +31,36 @@ export const uploadProfileImage = (file, fileName) => async (
   const firebase = getFirebase();
   const firestore = getFirestore();
   const user = firebase.auth().currentUser;
+  //!path where we want to img to be stored
   const path = `${user.uid}/user_images`;
   const options = {
     name: imageName,
   };
+  //! now Adding the Functionality
+
   try {
     dispatch(asyncActionStart());
-    // upload the file to firebase storage
+    //? upload the file to firebase
     let uploadedFile = await firebase.uploadFile(path, file, null, options);
-    console.log("uploadedFile", uploadedFile);
 
-    // get url of the image
-    let downloadURL = await uploadedFile.uploadTaskSnapshot.downloadURL;
-    // get userdoc
+    //? get URl of the img in the fireStorage
+    let downloadURL = await uploadedFile.uploadTaskSnapshot.ref.getDownloadURL();
+
+    //? get userDoc
     let userDoc = await firestore.get(`users/${user.uid}`);
-    // check if user has photo, if not update profile with new image
+
+    //? check if user has photo, if not update profile
     if (!userDoc.data().photoURL) {
       await firebase.updateProfile({
         photoURL: downloadURL,
       });
+      //? update the auth section in the firebase
       await user.updateProfile({
         photoURL: downloadURL,
       });
     }
-    // add the new photo to photos collection
+
+    //? add the img to fireStore
     await firestore.add(
       {
         collection: "users",
@@ -119,13 +68,15 @@ export const uploadProfileImage = (file, fileName) => async (
         subcollections: [{ collection: "photos" }],
       },
       {
-        name: imageName,
+        //? What we will add in our subcollections
+        name: fileName,
         url: downloadURL,
       }
     );
+
     dispatch(asyncActionFinish());
   } catch (error) {
-    console.log(error);
-    // throw new Error("Problem uploading photo");
+    dispatch(asyncActionFail());
+    throw new SubmissionError({ _error: error.message });
   }
 };

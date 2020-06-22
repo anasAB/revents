@@ -60,7 +60,6 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => {
-  console.log("#ٍStatee", state);
   return {
     providerId:
       state.firebase.auth.isLoaded &&
