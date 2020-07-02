@@ -60,10 +60,12 @@ const PhotosPage = () => {
       <Header sub color="teal" content="All Photos" />
 
       <Card.Group itemsPerRow={5}>
-        <Card>
-          <Image src="https://randomuser.me/api/portraits/men/20.jpg" />
-          <Button positive>Main Photo</Button>
-        </Card>
+        {files.length > 0 && (
+          <Card>
+            <Image src={files[0].preview} />
+            <Button positive>Main Photo</Button>
+          </Card>
+        )}
 
         <Card>
           <Image src="https://randomuser.me/api/portraits/men/20.jpg" />

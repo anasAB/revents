@@ -66,7 +66,6 @@ class NavBar extends Component {
 }
 
 const mapSateToProps = (state) => {
-  console.log("#STATE", state);
   return {
     // authenticated: state.auth.authenticated,
     authenticated: state.firebase.auth,
