@@ -23,11 +23,14 @@ class EventListItem extends Component {
           </Item.Group>
         </Segment>
         <Segment>
-          <span>
-            <Icon name="clock" /> {format(event.date.toDate(), "EEE do LLL")} at{" "}
-            {format(event.date.toDate(), "h:mm a")} |
-            <Icon name="marker" /> {event.venue}
-          </span>
+          {/* {event.date && (
+            <span>
+              <Icon name="clock" />
+              {format(event.date.toDate(), "EEE do LLL")} at{" "}
+              {format(event.date.toDate(), "h:mm a")} |
+              <Icon name="marker" /> {event.venue}
+            </span>
+          )} */}
         </Segment>
         <Segment secondary>
           <List horizontal>

@@ -86,9 +86,32 @@ const PhotosPage = ({ uploadProfileImage, photos, profile }) => {
       </Grid>
 
       <Divider />
+
+      <Header sub color="teal" content="All Photos" />
+
+      <Card.Group itemsPerRow={5}>
+        {files.length > 0 && (
+          <Card>
+            <Image src={files[0].preview} />
+            <Button positive>Main Photo</Button>
+          </Card>
+        )}
+
+        <Card>
+          <Image src="https://randomuser.me/api/portraits/men/20.jpg" />
+          <div className="ui two buttons">
+            <Button basic color="green">
+              Main
+            </Button>
+            <Button basic icon="trash" color="red" />
+          </div>
+        </Card>
+      </Card.Group>
+
       {files.length > 0 && (
         <UserPhotos photos={files[0].preview} profile={profile} />
       )}
+
     </Segment>
   );
 };

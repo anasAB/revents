@@ -40,19 +40,17 @@ const category = [
 ];
 
 class EventForm extends Component {
-  onhandelFormSubmit = (event) => {
-    if (this.props.initialValues.id) {
-      this.props.UpdateEvent(event);
-      this.props.history.push(`/event/${this.props.initialValues.id}`);
-    } else {
-      const newEvent = {
-        ...event,
-        id: cuid(),
-        hostPhotoURL: "/public/assets/user.png",
-        hostedBy: "BOB",
-      };
-      this.props.creatEvent(newEvent);
-      this.props.history.push("events");
+  onhandelFormSubmit = async (event) => {
+    try {
+      if (this.props.initialValues.id) {
+        this.props.UpdateEvent(event);
+        this.props.history.push(`/events/${this.props.initialValues.id}`);
+      } else {
+        let createdEvent = await this.props.creatEvent(event);
+        this.props.history.push(`events/${createdEvent.id}`);
+      }
+    } catch (error) {
+      console.log("####EROR", error);
     }
   };
 

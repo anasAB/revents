@@ -11,18 +11,46 @@ import {
 } from "../async/asyncActions";
 import { fetchSampleData } from "../../app/data/mockApi";
 import { toastr } from "react-redux-toastr";
+import { getFirebase } from "react-redux-firebase";
+
+const createNewEvent = (user, photoURL, event) => {
+  return {
+    ...event,
+    hostUid: user.uid,
+    hostedBy: user.displayName,
+    hostPhotoURL: photoURL || "/assets/user.png",
+    created: new Date(),
+    attendees: {
+      [user.uid]: {
+        going: true,
+        joinDate: new Date(),
+        photoURL: photoURL || "/assets/user.png",
+        displayName: user.displayName,
+        host: true,
+      },
+    },
+  };
+};
 
 //! Action Creator
 export const creatEvent = (event) => {
-  return async (dispatch) => {
+  return async (dispatch, getState, { getFirestore, getFirebase }) => {
+    const firestore = getFirestore();
+    const firebase = getFirebase();
+    const user = firebase.auth().currentUser;
+    const photoURL = getState().firebase.profile.photoURL;
+    const newEvent = createNewEvent(user, photoURL, event);
+
     try {
-      dispatch({
-        type: CREAT_EVENT,
-        payload: {
-          event,
-        },
+      let createdEvent = await firestore.add("events", newEvent);
+      await firestore.set(`event_attendee/${createdEvent.id}_${user.uid}`, {
+        eventId: createdEvent.id,
+        userUid: user.uid,
+        eventDate: event.date,
+        host: true,
       });
       toastr.success("Succcess!", "Event Has Been Created Successfully.. ");
+      return createdEvent;
     } catch (error) {
       toastr.error("Please Try Again Later", error);
     }
