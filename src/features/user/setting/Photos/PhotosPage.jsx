@@ -1,5 +1,12 @@
 import React, { useState, useEffect, Fragment, Component } from "react";
-import { Segment, Header, Divider, Grid, Button } from "semantic-ui-react";
+import {
+  Segment,
+  Header,
+  Divider,
+  Grid,
+  Button,
+  Card,
+} from "semantic-ui-react";
 import DropZoneInput from "./DropZoneInput";
 import CropperPhoto from "./CropperPhoto";
 import { connect } from "react-redux";
@@ -8,6 +15,7 @@ import { toastr } from "react-redux-toastr";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import UserPhotos from "./userPhotos";
+import { Image } from "@react-pdf/renderer";
 
 const PhotosPage = ({ uploadProfileImage, photos, profile }) => {
   //!Using useState Hooks
@@ -111,7 +119,6 @@ const PhotosPage = ({ uploadProfileImage, photos, profile }) => {
       {files.length > 0 && (
         <UserPhotos photos={files[0].preview} profile={profile} />
       )}
-
     </Segment>
   );
 };

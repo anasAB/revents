@@ -25,12 +25,9 @@ class eventDetail extends Component {
 
     //!in Case of event is not exists
     if (!event.exists) {
-      console.log("Event not Exists");
       history.push("/events");
       toastr.error("Sorry", "Event not Found");
     }
-
-    console.log("EVENT UPDATEd", event);
   }
 
   render() {
