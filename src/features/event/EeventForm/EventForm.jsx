@@ -49,10 +49,15 @@ class EventForm extends Component {
     await firestore.setListener(`events/${match.params.id}`);
 
     //!in Case of event is not exists
-    if (!event.exists) {
-      history.push("/events");
-      toastr.error("Sorry", "Event not Found");
-    }
+    // if (!event.exists) {
+    //   history.push("/events");
+    //   toastr.error("Sorry", "Event not Found");
+    // }
+  }
+
+  async componentWillUnmount() {
+    const { firestore, match } = this.props;
+    await firestore.unsetListener(`events/${match.params.id}`);
   }
 
   onhandelFormSubmit = async (event) => {

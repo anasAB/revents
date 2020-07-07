@@ -7,7 +7,6 @@ import { format, parseISO } from "date-fns";
 class EventListItem extends Component {
   render() {
     const { event, deleteEvent } = this.props;
-    console.log("#xxxxxxxxxx#event", event);
     return (
       <Segment.Group>
         <Segment>
@@ -22,6 +21,7 @@ class EventListItem extends Component {
                     style={{
                       top: "-1px",
                       position: "absolute",
+                      marginLeft: "-15px",
                     }}
                     ribbon="right"
                     color={event.cancelled ? "red" : "green"}
