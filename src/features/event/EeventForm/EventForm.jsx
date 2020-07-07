@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { Segment, Form, Button, Grid, Header } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { creatEvent, UpdateEvent } from "../eventActions";
+import { creatEvent, UpdateEvent, cancelToggle } from "../eventActions";
 import { reduxForm, Field } from "redux-form";
-import cuid from "cuid";
 import { TextInput } from "../../../app/common/Forms/TextInput";
 import { TextArea } from "../../../app/common/Forms/TextArea";
 import { SelectInput } from "../../../app/common/Forms/SelectInput";
@@ -15,6 +14,8 @@ import {
   isRequired,
   hasLengthGreaterThan,
 } from "revalidate";
+import { withFirestore } from "react-redux-firebase";
+import { toastr } from "react-redux-toastr";
 
 const validate = combineValidators({
   title: isRequired({ message: "the Event Title is required..!" }),
@@ -40,6 +41,25 @@ const category = [
 ];
 
 class EventForm extends Component {
+  async componentDidMount() {
+    const { firestore, match, history } = this.props;
+
+    let event = await firestore.get(`events/${match.params.id}`);
+    //! update event
+    await firestore.setListener(`events/${match.params.id}`);
+
+    //!in Case of event is not exists
+    // if (!event.exists) {
+    //   history.push("/events");
+    //   toastr.error("Sorry", "Event not Found");
+    // }
+  }
+
+  async componentWillUnmount() {
+    const { firestore, match } = this.props;
+    await firestore.unsetListener(`events/${match.params.id}`);
+  }
+
   onhandelFormSubmit = async (event) => {
     try {
       if (this.props.initialValues.id) {
@@ -50,7 +70,7 @@ class EventForm extends Component {
         this.props.history.push(`events/${createdEvent.id}`);
       }
     } catch (error) {
-      console.log("####EROR", error);
+      toastr.error("Sorry", error.message);
     }
   };
 
@@ -59,7 +79,9 @@ class EventForm extends Component {
   };
 
   render() {
-    const { history, invalid, pristine } = this.props;
+    const { history, invalid, pristine, event, cancelToggle } = this.props;
+    console.log("event Form", event);
+
     return (
       <Grid>
         <Grid.Column width={10}>
@@ -125,6 +147,13 @@ class EventForm extends Component {
               <Button type="button" onClick={() => history.goBack()}>
                 Cancel
               </Button>
+              <Button
+                content={event.cancelled ? "Reactivate Event" : "Cancel Event"}
+                type="button"
+                color={!event.cancelled ? "red" : "green"}
+                onClick={() => cancelToggle(!event.cancelled, event.id)}
+                floated="right"
+              />
             </Form>
           </Segment>
         </Grid.Column>
@@ -134,21 +163,35 @@ class EventForm extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const eventId = ownProps.match.params.id;
   let event = {};
 
-  const eventId = ownProps.match.params.id;
-  if (eventId && state.events.length > 0) {
-    event = state.events.filter((event) => event.id === eventId)[0];
+  //!get event from firestore
+  if (
+    state.firestore.ordered.events &&
+    state.firestore.ordered.events.length > 0
+  ) {
+    event =
+      state.firestore.ordered.events.filter(
+        (event) => event.id === eventId
+      )[0] || {};
   }
-
-  return { initialValues: event };
+  return { initialValues: event, event };
 };
 
 const mapDispatchToProps = {
   creatEvent,
   UpdateEvent,
+  cancelToggle,
 };
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(reduxForm({ form: "eventForm", validate })(EventForm));
+
+export default withFirestore(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(
+    reduxForm({ form: "eventForm", validate, enableReinitialize: true })(
+      EventForm
+    )
+  )
+);

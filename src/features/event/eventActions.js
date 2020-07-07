@@ -74,14 +74,16 @@ export const deleteEvent = (eventId) => {
 };
 
 export const UpdateEvent = (event) => {
-  return async (dispatch) => {
+  return async (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
     try {
-      dispatch({
-        type: UPDATE_EVENT,
-        payload: {
-          event,
-        },
-      });
+      await firestore.update(`events/${event.id}`, event);
+      // dispatch({
+      //   type: UPDATE_EVENT,
+      //   payload: {
+      //     event,
+      //   },
+      // });
       toastr.info("Updated", "The EVENT has been Updated");
     } catch (error) {
       toastr.error("Please Try Again Later", error);
@@ -101,4 +103,27 @@ export const loadEvents = () => {
       dispatch(asyncActionFail());
     }
   };
+};
+
+export const cancelToggle = (cancelled, eventId) => async (
+  dispatch,
+  getState,
+  { getFirestore }
+) => {
+  const firestore = getFirestore();
+  const message = cancelled
+    ? "Are You Sure You Want To Cancel It..!"
+    : "This Will Reactivate The Event";
+
+  console.log("eventId", cancelled);
+  try {
+    toastr.confirm(message, {
+      onOk: async () =>
+        await firestore.update(`events/${eventId}`, {
+          cancelled: cancelled,
+        }),
+    });
+  } catch (error) {
+    toastr.error(error.message);
+  }
 };

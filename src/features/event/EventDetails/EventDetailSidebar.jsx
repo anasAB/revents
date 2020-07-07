@@ -20,7 +20,7 @@ const EventDetailSidebar = ({ attendees }) => {
           {attendees &&
             attendees.map((attendee) => (
               <Item key={attendee.id} style={{ position: "relative" }}>
-                {attendees.Host && (
+                {attendees.host && (
                   <Label
                     style={{ position: "absolute" }}
                     color="green"
@@ -31,7 +31,7 @@ const EventDetailSidebar = ({ attendees }) => {
                 )}
                 <Item.Image size="tiny" src={attendee.photoURL} />
                 <Item.Content verticalAlign="middle">
-                  <Item.Header as="h3">{attendee.name}</Item.Header>
+                  <Item.Header as="h3">{attendee.displayName}</Item.Header>
                 </Item.Content>
               </Item>
             ))}

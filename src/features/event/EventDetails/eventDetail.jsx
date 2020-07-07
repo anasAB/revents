@@ -6,7 +6,7 @@ import EventDetailSidebar from "./EventDetailSidebar";
 import EventDetailHeader from "./EventDetailHeader";
 import { connect } from "react-redux";
 import { withFirestore } from "react-redux-firebase";
-import { toastr } from "react-redux-toastr";
+import { goingToEvent, cancelGoingToEvent } from "../../user/userAcions";
 
 const objectToArray = (object) => {
   if (object) {
@@ -21,27 +21,40 @@ const objectToArray = (object) => {
 class eventDetail extends Component {
   async componentDidMount() {
     const { firestore, match, history } = this.props;
-    let event = await firestore.get(`events/${match.params.id}`);
+    await firestore.setListener(`events/${match.params.id}`);
+
+    // let event = await firestore.get(`events/${match.params.id}`);
 
     //!in Case of event is not exists
-    if (!event.exists) {
-      console.log("Event not Exists");
-      history.push("/events");
-      toastr.error("Sorry", "Event not Found");
-    }
+    // if (!event.exists) {
+    //   history.push("/events");
+    //   toastr.error("Sorry", "Event not Found");
+    // }
+  }
 
-    console.log("EVENT UPDATEd", event);
+  async componentWillUnmount() {
+    const { firestore, match } = this.props;
+    await firestore.unsetListener(`events/${match.params.id}`);
   }
 
   render() {
-    const { event } = this.props;
+    const { event, auth, goingToEvent, cancelGoingToEvent } = this.props;
     const attendees =
       event && event.attendees && objectToArray(event.attendees);
+    const isHost = event.hostUid === auth.uid;
+    const isGoing = attendees && attendees.some((a) => a.id === auth.uid);
 
     return (
       <Grid>
         <Grid.Column width={10}>
-          <EventDetailHeader event={event} />
+          <EventDetailHeader
+            event={event}
+            isGoing={isGoing}
+            isHost={isHost}
+            goingToEvent={goingToEvent}
+            cancelGoingToEvent={cancelGoingToEvent}
+          />
+
           <EventDetailInfo event={event} />
           <EventDetailChats />
         </Grid.Column>
@@ -55,6 +68,7 @@ class eventDetail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
+
   let event = {};
 
   if (
@@ -66,9 +80,17 @@ const mapStateToProps = (state, ownProps) => {
         (event) => event.id === eventId
       )[0] || {};
   }
+
   return {
     event,
     auth: state.firebase.auth,
   };
 };
-export default withFirestore(connect(mapStateToProps)(eventDetail));
+
+const mapDispatchToProps = {
+  goingToEvent,
+  cancelGoingToEvent,
+};
+export default withFirestore(
+  connect(mapStateToProps, mapDispatchToProps)(eventDetail)
+);
