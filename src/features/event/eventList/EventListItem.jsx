@@ -3,6 +3,7 @@ import { Button, Segment, List, Icon, Item, Label } from "semantic-ui-react";
 import EventListAttendee from "./EventListAttendee";
 import { Link } from "react-router-dom";
 import { format, parseISO } from "date-fns";
+import { objectToArray } from "../EventDetails/eventDetail";
 
 class EventListItem extends Component {
   render() {
@@ -14,9 +15,12 @@ class EventListItem extends Component {
             <Item>
               <Item.Image size="tiny" circular src={event.hostPhotoURL} />
               <Item.Content>
-                <Item.Header as="a">{event.title}</Item.Header>
+                <Item.Header as={Link} to={`/event/${event.id}`}>
+                  {event.title}
+                </Item.Header>
                 <Item.Description>
-                  Hosted by <a>{event.hostedBy}</a>
+                  Hosted by{" "}
+                  <Link to={`/profile/${event.hostUid}`}>{event.hostedBy}</Link>
                   <Label
                     style={{
                       top: "-1px",
@@ -49,7 +53,7 @@ class EventListItem extends Component {
         <Segment secondary>
           <List horizontal>
             {event.attendees &&
-              Object.values(event.attendees).map((attend) => (
+              objectToArray(event.attendees).map((attend) => (
                 <EventListAttendee key={attend.id} attend={attend} />
               ))}
           </List>
