@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { withFirestore } from "react-redux-firebase";
 import { goingToEvent, cancelGoingToEvent } from "../../user/userAcions";
 
-const objectToArray = (object) => {
+export const objectToArray = (object) => {
   if (object) {
     //!source[1] will give us the value && { id: source[0] } is the ID
 

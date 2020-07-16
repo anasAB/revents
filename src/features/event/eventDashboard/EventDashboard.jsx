@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { deleteEvent, UpdateEvent, creatEvent } from "../eventActions";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import EventActivity from "../EventActivity/EventActivity";
-import { firestoreConnect } from "react-redux-firebase";
+import { firestoreConnect, isLoaded } from "react-redux-firebase";
 
 class EventDashboard extends Component {
   handelCreateEvent = (newEvent) => {
@@ -28,7 +28,8 @@ class EventDashboard extends Component {
   render() {
     const { events, loading } = this.props;
 
-    if (loading) {
+    //! we will use isLoaded
+    if (!isLoaded(events)) {
       return <LoadingComponent inverted={false} />;
     }
 
