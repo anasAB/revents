@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import { Button, Segment, List, Icon, Item, Label } from "semantic-ui-react";
+import { Button, Segment, List, Item, Label } from "semantic-ui-react";
 import EventListAttendee from "./EventListAttendee";
 import { Link } from "react-router-dom";
-import { format, parseISO } from "date-fns";
 import { objectToArray } from "../EventDetails/eventDetail";
 
 class EventListItem extends Component {
@@ -49,6 +48,11 @@ class EventListItem extends Component {
               <Icon name="marker" /> {event.venue}
             </span>
           )} */}
+          City: <span>{event.city}</span>
+          <br />
+          category:<span>{event.category}</span>
+          <br />
+          Date:<span>{event.date}</span>
         </Segment>
         <Segment secondary>
           <List horizontal>

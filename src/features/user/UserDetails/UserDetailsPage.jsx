@@ -9,10 +9,28 @@ import UserDetailedSidebar from "./UserDetailedSidebar";
 import UserDetailedPhotos from "./UserDetailedPhotos";
 import UserDetailedDescription from "./UserDetailedDescription";
 import UserDetailedEvents from "./UserDetailedEvents";
+import { getUserEvents } from "../userAcions";
 
 class UserDetailsPage extends Component {
+  async componentDidMount() {
+    let events = await this.props.getUserEvents(this.props.userUid);
+  }
+
+  changeTab = (event, data) => {
+    this.props.getUserEvents(this.props.userUid, data.activeIndex);
+  };
+
   render() {
-    const { profile, photos, auth, match, requesting } = this.props;
+    const {
+      profile,
+      photos,
+      auth,
+      match,
+      requesting,
+      events,
+      eventsLoading,
+    } = this.props;
+
     const isCurrentUser = auth.uid === match.params.id;
     const loading = Object.values(requesting).some((a) => a === true);
     if (loading) return <LoadingComponent />;
@@ -22,15 +40,23 @@ class UserDetailsPage extends Component {
         <UserDetailedDescription profile={profile} />
         <UserDetailedSidebar isCurrentUser={isCurrentUser} />
         {photos && <UserDetailedPhotos photos={photos} />}
-        <UserDetailedEvents />
+        <UserDetailedEvents
+          events={events}
+          eventLoading={eventsLoading}
+          changeTab={this.changeTab}
+        />
       </Grid>
     );
   }
 }
+const mapAction = {
+  getUserEvents,
+};
 
 const mapState = (state, ownProps) => {
   let userUid = null;
   let profile = {};
+
   if (ownProps.match.params.id === state.auth.uid) {
     profile = state.firebase.profile;
   } else {
@@ -43,13 +69,18 @@ const mapState = (state, ownProps) => {
   return {
     profile,
     userUid,
+    events: state.events,
+    eventsLoading: state.async.loading,
     auth: state.firebase.auth,
     photos: state.firestore.ordered.photos,
     requesting: state.firestore.status.requesting,
   };
 };
 
-export default connect(mapState)(
+export default connect(
+  mapState,
+  mapAction
+)(
   firestoreConnect((auth, userUid) => userDetailedQuery(auth, userUid))(
     UserDetailsPage
   )

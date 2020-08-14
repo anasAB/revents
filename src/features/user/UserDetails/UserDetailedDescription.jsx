@@ -3,7 +3,6 @@ import { Segment, Grid, Header, List, Item, Icon } from "semantic-ui-react";
 import { format } from "date-fns";
 
 const UserDetailedDescription = ({ profile }) => {
-  console.log("PROFILE", profile);
   return (
     <Grid.Column width={12}>
       <Segment>
@@ -17,7 +16,7 @@ const UserDetailedDescription = ({ profile }) => {
               Originally from <strong>{profile.origin || "tbn"}</strong>
             </p>
             <p>
-              Member Since:
+              Member Since:{" "}
               <strong>
                 {profile.createdAt &&
                   format(profile.createdAt.toDate(), "dd LLL yyyy")}

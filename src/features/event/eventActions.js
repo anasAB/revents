@@ -1,9 +1,4 @@
-import {
-  CREAT_EVENT,
-  DELETE_EVENT,
-  UPDATE_EVENT,
-  FETCH_EVENT,
-} from "./eventConstants";
+import { DELETE_EVENT, FETCH_EVENT } from "./eventConstants";
 import {
   asyncActionFinish,
   asyncActionStart,
@@ -12,6 +7,7 @@ import {
 import { fetchSampleData } from "../../app/data/mockApi";
 import { toastr } from "react-redux-toastr";
 import { getFirebase } from "react-redux-firebase";
+import firebase from "../../app/Config/firebase";
 
 const createNewEvent = (user, photoURL, event) => {
   return {
