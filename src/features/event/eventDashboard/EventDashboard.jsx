@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Container, Message, Icon } from "semantic-ui-react";
+import { Grid, Container, Message, Icon, Button } from "semantic-ui-react";
 import EventList from "../eventList/EventList";
 import cuid from "cuid";
 import { connect } from "react-redux";
@@ -26,7 +26,7 @@ class EventDashboard extends Component {
   };
 
   render() {
-    const { events, loading } = this.props;
+    const { events } = this.props;
 
     //! we will use isLoaded
     if (!isLoaded(events)) {
@@ -66,8 +66,6 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => {
   return {
-    // events: state.events,
-    //!Load events from FireStore 0
     events: state.firestore.ordered.events,
     loading: state.async.loading,
   };
