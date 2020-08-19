@@ -5,8 +5,10 @@ import { EventDetailChats } from "./EventDetailChats";
 import EventDetailSidebar from "./EventDetailSidebar";
 import EventDetailHeader from "./EventDetailHeader";
 import { connect } from "react-redux";
-import { withFirestore } from "react-redux-firebase";
+import { withFirestore, firebaseConnect, isEmpty } from "react-redux-firebase";
 import { goingToEvent, cancelGoingToEvent } from "../../user/userAcions";
+import { compose } from "redux";
+import { addingComments } from "../eventActions";
 
 export const objectToArray = (object) => {
   if (object) {
@@ -20,16 +22,8 @@ export const objectToArray = (object) => {
 
 class eventDetail extends Component {
   async componentDidMount() {
-    const { firestore, match, history } = this.props;
+    const { firestore, match } = this.props;
     await firestore.setListener(`events/${match.params.id}`);
-
-    // let event = await firestore.get(`events/${match.params.id}`);
-
-    //!in Case of event is not exists
-    // if (!event.exists) {
-    //   history.push("/events");
-    //   toastr.error("Sorry", "Event not Found");
-    // }
   }
 
   async componentWillUnmount() {
@@ -38,7 +32,15 @@ class eventDetail extends Component {
   }
 
   render() {
-    const { event, auth, goingToEvent, cancelGoingToEvent } = this.props;
+    const {
+      event,
+      auth,
+      goingToEvent,
+      cancelGoingToEvent,
+      addingComments,
+      eventChat,
+    } = this.props;
+
     const attendees =
       event && event.attendees && objectToArray(event.attendees);
     const isHost = event.hostUid === auth.uid;
@@ -56,7 +58,11 @@ class eventDetail extends Component {
           />
 
           <EventDetailInfo event={event} />
-          <EventDetailChats />
+          <EventDetailChats
+            addingComments={addingComments}
+            eventId={event.id}
+            eventChat={eventChat}
+          />
         </Grid.Column>
         <Grid.Column width={6}>
           <EventDetailSidebar attendees={attendees} />
@@ -68,8 +74,11 @@ class eventDetail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
-
   let event = {};
+
+  if (state.firestore.ordered.events && state.firestore.ordered.events[0]) {
+    event = state.firestore.ordered.events[0];
+  }
 
   if (
     state.firestore.ordered.events &&
@@ -84,13 +93,20 @@ const mapStateToProps = (state, ownProps) => {
   return {
     event,
     auth: state.firebase.auth,
+    eventChat:
+      !isEmpty(state.firebase.data.event_chat) &&
+      objectToArray(state.firebase.data.event_chat[ownProps.match.params.id]),
   };
 };
 
 const mapDispatchToProps = {
   goingToEvent,
   cancelGoingToEvent,
+  addingComments,
 };
-export default withFirestore(
-  connect(mapStateToProps, mapDispatchToProps)(eventDetail)
-);
+
+export default compose(
+  withFirestore,
+  connect(mapStateToProps, mapDispatchToProps),
+  firebaseConnect((props) => [`event_chat/${props.match.params.id}`])
+)(eventDetail);

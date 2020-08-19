@@ -1,8 +1,6 @@
 import React from "react";
 import { Button, Divider, Form, Header, Segment } from "semantic-ui-react";
 import { Field, reduxForm } from "redux-form";
-
-// import PlaceInput from "../../../app/common/form/PlaceInput";
 import { SelectInput } from "../../../app/common/Forms/SelectInput";
 import { TextArea } from "../../../app/common/Forms/TextArea";
 import { TextInput } from "../../../app/common/Forms/TextInput";
@@ -17,13 +15,7 @@ const interests = [
   { key: "travel", text: "Travel", value: "travel" },
 ];
 
-const aboutPage = ({
-  pristine,
-  submitting,
-  handleSubmit,
-  updateProfile,
-  profile,
-}) => {
+const aboutPage = ({ pristine, submitting, handleSubmit, updateProfile }) => {
   return (
     <Segment>
       <Header dividing size="large" content="About Me" />
