@@ -33,7 +33,7 @@ const SettingDashboard = ({
               <AboutPage initialValues={user} updateProfile={updateProfile} />
             )}
           />
-          } />
+
           <Route path="/setting/photos" component={PhotosPage} />
           <Route
             path="/setting/account"

@@ -1,7 +1,12 @@
 import React, { Fragment } from "react";
-import { Button, Form, Comment, Segment, Header } from "semantic-ui-react";
+import { Comment, Segment, Header } from "semantic-ui-react";
+import EventChatForm from "./EventChatForm";
+import { Link } from "react-router-dom";
+import { formatDistance } from "date-fns";
 
-export const EventDetailChats = () => {
+export const EventDetailChats = ({ addingComments, eventId, eventChat }) => {
+  console.log("eventChat", eventChat);
+
   return (
     <Fragment>
       <Segment
@@ -13,79 +18,38 @@ export const EventDetailChats = () => {
       >
         <Header>Chat about this event</Header>
       </Segment>
-
       <Segment attached>
         <Comment.Group>
-          <Comment>
-            <Comment.Avatar src="/assets/user.png" />
-            <Comment.Content>
-              <Comment.Author as="a">Matt</Comment.Author>
-              <Comment.Metadata>
-                <div>Today at 5:42PM</div>
-              </Comment.Metadata>
-              <Comment.Text>How artistic!</Comment.Text>
-              <Comment.Actions>
-                <Comment.Action>Reply</Comment.Action>
-              </Comment.Actions>
-            </Comment.Content>
-          </Comment>
-
-          <Comment>
-            <Comment.Avatar src="/assets/user.png" />
-            <Comment.Content>
-              <Comment.Author as="a">Elliot Fu</Comment.Author>
-              <Comment.Metadata>
-                <div>Yesterday at 12:30AM</div>
-              </Comment.Metadata>
-              <Comment.Text>
-                <p>
-                  This has been very useful for my research. Thanks as well!
-                </p>
-              </Comment.Text>
-              <Comment.Actions>
-                <Comment.Action>Reply</Comment.Action>
-              </Comment.Actions>
-            </Comment.Content>
-            <Comment.Group>
-              <Comment>
-                <Comment.Avatar src="/assets/user.png" />
+          {eventChat &&
+            Object.keys(eventChat).map((chat) => (
+              <Comment key={eventChat[chat].id}>
+                <Comment.Avatar
+                  src={eventChat[chat].photoURL || "/assets/user.png"}
+                />
                 <Comment.Content>
-                  <Comment.Author as="a">Jenny Hess</Comment.Author>
+                  <Comment.Author
+                    as={Link}
+                    to={`/profile/${eventChat[chat].uid}`}
+                  >
+                    {eventChat[chat].displayName}
+                  </Comment.Author>
                   <Comment.Metadata>
-                    <div>Just now</div>
+                    <div>
+                      {formatDistance(eventChat[chat].date, Date.now())} ago
+                    </div>
                   </Comment.Metadata>
-                  <Comment.Text>Elliot you are always so right :)</Comment.Text>
+                  <Comment.Text>{eventChat[chat].textComment}</Comment.Text>
                   <Comment.Actions>
                     <Comment.Action>Reply</Comment.Action>
                   </Comment.Actions>
                 </Comment.Content>
               </Comment>
-            </Comment.Group>
-          </Comment>
-
-          <Comment>
-            <Comment.Avatar src="/assets/user.png" />
-            <Comment.Content>
-              <Comment.Author as="a">Joe Henderson</Comment.Author>
-              <Comment.Metadata>
-                <div>5 days ago</div>
-              </Comment.Metadata>
-              <Comment.Text>Dude, this is awesome. Thanks so much</Comment.Text>
-              <Comment.Actions>
-                <Comment.Action>Reply</Comment.Action>
-              </Comment.Actions>
-            </Comment.Content>
-          </Comment>
-
-          <Form reply>
-            <Form.TextArea />
-            <Button
-              content="Add Reply"
-              labelPosition="left"
-              icon="edit"
-              primary
-            />
-          </Form>
+            ))}
+          <EventChatForm
+            addingComments={addingComments}
+            eventId={eventId}
+            eventChat={eventChat}
+          />
         </Comment.Group>
       </Segment>
     </Fragment>

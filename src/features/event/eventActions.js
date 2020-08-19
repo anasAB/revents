@@ -123,3 +123,30 @@ export const cancelToggle = (cancelled, eventId) => async (
     toastr.error(error.message);
   }
 };
+
+export const addingComments = (eventId, comment, parentId) => async (
+  dispatch,
+  getState,
+  { getFirebase }
+) => {
+  const firebase = getFirebase();
+  const profile = getState().firebase.profile;
+  const user = firebase.auth().currentUser;
+
+  let newComment = {
+    // parentId: parentId,
+    displayName: profile.displayName,
+    photoURL: profile.providerData[0].photoURL,
+    uid: user.uid,
+    textComment: comment.comment,
+    date: Date.now(),
+  };
+
+  try {
+    await firebase.push(`event_chat/${eventId}`, newComment);
+    toastr.success("New Comments has been added");
+  } catch (error) {
+    console.log("Cant add a new comment");
+    toastr.error(error.message);
+  }
+};
