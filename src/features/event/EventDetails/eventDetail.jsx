@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Grid } from "semantic-ui-react";
 import EventDetailInfo from "./EventDetailInfo";
-import { EventDetailChats } from "./EventDetailChats";
 import EventDetailSidebar from "./EventDetailSidebar";
 import EventDetailHeader from "./EventDetailHeader";
 import { connect } from "react-redux";
@@ -9,6 +8,7 @@ import { withFirestore, firebaseConnect, isEmpty } from "react-redux-firebase";
 import { goingToEvent, cancelGoingToEvent } from "../../user/userAcions";
 import { compose } from "redux";
 import { addingComments } from "../eventActions";
+import EventDetailChats from "./EventDetailChats";
 
 export const objectToArray = (object) => {
   if (object) {
